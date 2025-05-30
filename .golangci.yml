@@ -1,0 +1,25 @@
+# .golangci.yml
+run:
+  tests: true
+  timeout: 3m
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - ineffassign
+    - goimports
+    - revive
+    - gocyclo
+
+linters-settings:
+  revive:
+    severity: warning
+    rules:
+      - name: indent-error-flow
+      - name: var-naming
+      - name: if-return
+      - name: range-val-in-closure
+  gocyclo:
+    min-complexity: 15
