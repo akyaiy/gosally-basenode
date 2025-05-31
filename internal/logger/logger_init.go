@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-func newLogger(w io.Writer, o slog.HandlerOptions) *Logger {
-	return &Logger{sloglogger: slog.New(slog.NewTextHandler(w, &o))}
+func newLogger(w io.Writer, o slog.HandlerOptions) *Log {
+	return &Log{sloglogger: slog.New(slog.NewTextHandler(w, &o))}
 }
 
 func InitBaseLog() *GSLog {

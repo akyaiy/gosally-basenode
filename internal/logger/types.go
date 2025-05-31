@@ -2,21 +2,21 @@ package logger
 
 import "log/slog"
 
-type appLogger interface {
-	newLogger() *Logger
-	Info(msg string, args ...any)
-	Warn(msg string, args ...any)
-	Error(msg string, args ...any)
-	Debug(msg string, args ...any)
+type Logger interface {
+	Debug(args ...interface{})
+	Info(args ...interface{})
+	Warn(args ...interface{})
+	Error(args ...interface{})
+	Fatal(args ...interface{})
 }
 
-type Logger struct {
-	appLogger
+type Log struct {
+	Logger
 	sloglogger *slog.Logger
 }
 
 type GSLog struct {
-	App  *Logger
-	HTTP *Logger
-	DB   *Logger
+	App  *Log
+	HTTP *Log
+	DB   *Log
 }
