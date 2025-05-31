@@ -24,10 +24,6 @@ const (
 	True = "true"
 )
 
-type ConfigD interface {
-	GetConfig() *TypeConfig
-}
-
 type Config struct {
 	Vars TypeConfig
 }
