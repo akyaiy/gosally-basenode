@@ -11,7 +11,11 @@ lint-setup:
 goimports-setup:
 	go install golang.org/x/tools/cmd/goimports@latest
 
-setup: lint-setup goimports-setup
+golicenses-setup:
+	go install github.com/google/go-licenses@latest
+
+setup: lint-setup goimports-setup golicenses-setup
+	@echo "Setting up the development environment..."
 	@mkdir -p $(BIN_DIR)
 	@echo "Setup complete. Run 'make build' to compile the application."
 
@@ -35,6 +39,10 @@ lint:
 	@$(GOPATH)/bin/golangci-lint run
 
 check: fmt vet lint test
+
+licenses:
+	@$(GOPATH)/bin/go-licenses save ./... --save_path=third_party/licenses
+	@echo "Licenses have been exported to third_party/licenses"
 
 clean:
 	@rm -rf bin

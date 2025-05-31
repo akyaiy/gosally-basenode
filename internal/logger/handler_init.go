@@ -1,19 +1,27 @@
 package logger
 
 import (
-	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"log/slog"
 	"os"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 )
+
+const LevelFallback = slog.Level(-8)
 
 func createTextHandler(out io.Writer, level slog.Level, addSource bool) slog.Handler {
 	return slog.NewTextHandler(out, &slog.HandlerOptions{
 		Level:     level,
 		AddSource: addSource,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
-			switch a.Key {
-			case slog.TimeKey:
+			if a.Key == slog.LevelKey {
+				level := a.Value.Any().(slog.Level)
+				if level == LevelFallback {
+					return slog.String(slog.LevelKey, "FALLBACK")
+				}
+			}
+			if a.Key == slog.TimeKey {
 				t := a.Value.Time()
 				return slog.String("time", t.Format("2006-01-02 15:04:05"))
 			}
@@ -22,19 +30,31 @@ func createTextHandler(out io.Writer, level slog.Level, addSource bool) slog.Han
 	})
 }
 
-func createJsonHandler(out io.Writer, level slog.Level, addSource bool) slog.Handler {
+func createJSONHandler(out io.Writer, level slog.Level, addSource bool) slog.Handler {
 	return slog.NewJSONHandler(out, &slog.HandlerOptions{
 		Level:     level,
 		AddSource: addSource,
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == slog.LevelKey {
+				level := a.Value.Any().(slog.Level)
+				if level == LevelFallback {
+					return slog.String(slog.LevelKey, "FALLBACK")
+				}
+			}
+			return a
+		},
 	})
 }
 
 func InitMultiHandler(stdout bool, slogPath string, level slog.Level) *slog.Logger {
 	var (
 		// Whether to indicate in the logs the function, package and file from which the log came
-		addSource      = level == slog.LevelDebug
+		addSource      = level == slog.LevelDebug || level == LevelFallback
 		jsonHandler    slog.Handler
 		textHandler    slog.Handler
+		rotatingWriter *lumberjack.Logger
+	)
+	if !(slogPath == "" || slogPath == "\000") {
 		rotatingWriter = &lumberjack.Logger{
 			Filename:   slogPath,
 			MaxSize:    5,
@@ -42,8 +62,10 @@ func InitMultiHandler(stdout bool, slogPath string, level slog.Level) *slog.Logg
 			MaxAge:     7,
 			Compress:   true,
 		}
-	)
-	jsonHandler = createJsonHandler(rotatingWriter, level, addSource)
+		jsonHandler = createJSONHandler(rotatingWriter, level, addSource)
+	} else {
+		return slog.New(NewMultiHandler(createTextHandler(os.Stdout, level, addSource)))
+	}
 	if stdout {
 		textHandler = createTextHandler(os.Stdout, level, addSource)
 		return slog.New(NewMultiHandler(textHandler, jsonHandler))
