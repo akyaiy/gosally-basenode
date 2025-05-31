@@ -29,5 +29,5 @@ type ConfigD interface {
 }
 
 type Config struct {
-	Config TypeConfig
+	Vars TypeConfig
 }
