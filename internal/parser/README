@@ -1,0 +1,2 @@
+The parser module provides string parameter parsing and file config.
+It's closely related to the config package.
