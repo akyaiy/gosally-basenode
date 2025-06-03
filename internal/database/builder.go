@@ -1,5 +1,7 @@
 package database
 
+import "github.com/akyaiy/gosally-basenode/internal/logger"
+
 func NewConnection() *ConnectionBuilder {
 	return &ConnectionBuilder{
 		opts: DatabaseConnectionOpt{},
@@ -45,4 +47,48 @@ func (b *ConnectionBuilder) EndBuild() *DatabaseConnectionOpt {
 		panic(ErrConnectionIDRequired)
 	}
 	return &b.opts
+}
+
+func NewDriver() *DriverBuilder {
+	return &DriverBuilder{
+		driver: Driver{
+			Log: *logger.NewMockLogger(), // Logger should be set later
+		},
+	}
+}
+
+func (b *DriverBuilder) WithLogger(log logger.Log) *DriverBuilder {
+	b.driver.Log = log
+	return b
+}
+
+func (b *DriverBuilder) WithDriverType(driverType int) *DriverBuilder {
+	if driver, exists := _driversDefinitions[driverType]; exists {
+		b.driver.driver = driver.(DriversType)
+	} else {
+		panic(ErrDriverNotFound)
+	}
+	return b
+}
+
+func (b *DriverBuilder) EndSafeBuild() (*Driver, error) {
+	if b.driver.Log.Logger == nil {
+		return nil, ErrLoggerNotSet
+	}
+
+	if b.driver.driver == nil {
+		return nil, ErrDriverNotFound
+	}
+	return &b.driver, nil
+}
+
+func (b *DriverBuilder) EndBuild() *Driver {
+	if b.driver.Log.Logger == nil {
+		panic(ErrLoggerNotSet)
+	}
+
+	if b.driver.driver == nil {
+		panic(ErrDriverNotFound)
+	}
+	return &b.driver
 }

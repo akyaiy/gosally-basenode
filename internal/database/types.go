@@ -7,10 +7,14 @@ import (
 	"github.com/akyaiy/gosally-basenode/internal/sessions"
 )
 
+const /* Drivers */ (
+	DriverTypeSQLite = iota
+)
+
 // DriverContract defines the interface for database drivers.
 type DriverContract interface {
 	// Init initializes the driver and returns a Driver instance.
-	Init() (*Driver, error)
+	Init() error
 
 	// Connect connecting to the database using the provided connection string.
 	Connect(o *DatabaseConnectionOpt) error
@@ -37,21 +41,41 @@ type ConnectionBuilder struct {
 	opts DatabaseConnectionOpt
 }
 
+type DriverBuilderContract interface {
+	NewDriver() *DriverBuilder
+	WithLogger(logger logger.Log) *DriverBuilder
+	WithDriverType(driverType int) *DriverBuilder
+	EndSafeBuild() (*Driver, error)
+	EndBuild() *Driver
+}
+
+type DriverBuilder struct {
+	driver Driver
+}
+
 type Driver struct {
 	Log    logger.Log
-	driver *DriversType
+	driver DriversType
 }
 
 // DriversType is a map that holds available database drivers.
-type DriversType map[string]any
+type DriversType map[int]any
 
-var Drivers DriversType = DriversType{
-	"sqlite": &SQLiteDriver{
+// _driversDefinitions holds the definitions of available drivers.
+var _driversDefinitions DriversType = DriversType{
+	DriverTypeSQLite: &_SQLiteDriver{
 		SQLite: nil,
 	},
+	/*
+		The following drivers are not implemented yet, but can be added later:
+		DriverTypePostgres: &PostgresDriver{
+			Postgres: nil,
+		},
+		etc.
+	*/
 }
 
-type SQLiteDriver struct {
+type _SQLiteDriver struct {
 	SQLite *sql.DB
 }
 
