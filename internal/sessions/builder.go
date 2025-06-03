@@ -1,6 +1,6 @@
 package sessions
 
-func NewSessionBuilder() *Builder {
+func NewSession() *Builder {
 	return &Builder{
 		session: Session{},
 	}

@@ -7,7 +7,6 @@ type Session struct {
 }
 
 type SessionBuilderContract interface {
-	BuildSession() *Builder
 	WithDescription(description string) *Builder
 	WithTTL(ttl int64) *Builder
 	WithSessionID(sessionID string) *Builder
