@@ -17,8 +17,8 @@ func TestMain(m *testing.M) {
 func TestParseArgs(t *testing.T) {
 	args := []string{"prog", "--listen-address=0.0.0.0"}
 
-	var p = &parser.Parser{Config: config.Config{}}
-	err := p.ParseArgs(args)
+	var d = parser.NewDriver().EndBuild()
+	err := d.ParseArgs(args)
 	if err != nil {
 		t.Errorf("ParseArgs failed: %v", err)
 	}
@@ -26,7 +26,7 @@ func TestParseArgs(t *testing.T) {
 		"exec-name":      config.ConfValue{Value: "prog", Source: config.SrcCMD},
 		"listen-address": config.ConfValue{Value: "0.0.0.0", Source: config.SrcCMD},
 	}
-	if !reflect.DeepEqual(want, p.Config.Vars) {
-		t.Fatalf("Expected %+v, got %+v", want, p.Config.Vars)
+	if !reflect.DeepEqual(want, d.Config.Vars) {
+		t.Fatalf("Expected %+v, got %+v", want, d.Config.Vars)
 	}
 }
