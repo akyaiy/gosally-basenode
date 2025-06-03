@@ -5,7 +5,7 @@ import (
 	"github.com/akyaiy/gosally-basenode/internal/logger"
 )
 
-type ParserD interface {
+type ConfigParse interface {
 	ParseArgs(args []string) error
 	ParseCMDlineArgs() error
 
