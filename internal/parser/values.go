@@ -11,7 +11,7 @@ import (
 	"github.com/akyaiy/gosally-basenode/internal/logger"
 )
 
-func (s *Parser) setValue(_key string, _val string, _src config.Source) error {
+func (s *Driver) setValue(_key string, _val string, _src config.Source) error {
 	logger.CheckAndSetVoid(&s.Log)
 	var (
 		tmpSrc  = s.Config.Vars[_key].Source

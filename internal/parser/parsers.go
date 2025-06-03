@@ -18,7 +18,7 @@ func containsKey(slice []string, item string) error {
 	return errors.New("0x000003e8")
 }
 
-func (s *Parser) parseShortParameters(args string, _src config.Source) error {
+func (s *Driver) parseShortParameters(args string, _src config.Source) error {
 	logger.CheckAndSetVoid(&s.Log)
 	if strings.Contains(args, "=") {
 		parts := strings.SplitN(args, "=", 2)
@@ -71,7 +71,7 @@ func (s *Parser) parseShortParameters(args string, _src config.Source) error {
 	return errors.New("0x000003f2")
 }
 
-func (s *Parser) parseLongParameter(arg string, _src config.Source) error {
+func (s *Driver) parseLongParameter(arg string, _src config.Source) error {
 	if strings.Contains(arg, "=") {
 		parts := strings.SplitN(arg, "=", 2)
 		key := parts[0]

@@ -9,7 +9,7 @@ import (
 	"github.com/akyaiy/gosally-basenode/internal/logger"
 )
 
-func (s *Parser) ParseArgs(args []string) error {
+func (s *Driver) ParseArgs(args []string) error {
 	if s.Config.Vars == nil {
 		s.Config.Vars = make(config.TypeConfig)
 	}
@@ -42,6 +42,6 @@ func (s *Parser) ParseArgs(args []string) error {
 	return nil
 }
 
-func (s *Parser) ParseCMDlineArgs() error {
+func (s *Driver) ParseCMDlineArgs() error {
 	return s.ParseArgs(os.Args)
 }
