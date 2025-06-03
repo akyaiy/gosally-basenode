@@ -11,8 +11,8 @@ type Logger interface {
 }
 
 type Log struct {
-	Logger
-	sloglogger *slog.Logger
+	Logger     Logger
+	slogLogger *slog.Logger
 }
 
 type GSLog struct {

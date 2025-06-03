@@ -1,17 +1,17 @@
 package logger
 
 func (l *Log) Info(msg string, args ...any) {
-	l.sloglogger.Info(msg, args...)
+	l.slogLogger.Info(msg, args...)
 }
 
 func (l *Log) Warn(msg string, args ...any) {
-	l.sloglogger.Warn(msg, args...)
+	l.slogLogger.Warn(msg, args...)
 }
 
 func (l *Log) Error(msg string, args ...any) {
-	l.sloglogger.Error(msg, args...)
+	l.slogLogger.Error(msg, args...)
 }
 
 func (l *Log) Debug(msg string, args ...any) {
-	l.sloglogger.Debug(msg, args...)
+	l.slogLogger.Debug(msg, args...)
 }

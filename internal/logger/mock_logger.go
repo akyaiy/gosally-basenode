@@ -2,10 +2,8 @@ package logger
 
 type MockLoggerType struct{}
 
-// Убедимся что VoidoggerType реализует интерфейс Logger
+// Убедимся что MockLoggerType реализует интерфейс Logger
 var _ Logger = (*MockLoggerType)(nil)
-
-var MockLogger Logger = &MockLoggerType{}
 
 func (l *MockLoggerType) Debug(args ...interface{})                   {}
 func (l *MockLoggerType) Debugf(format string, args ...interface{})   {}
@@ -20,6 +18,13 @@ func (l *MockLoggerType) Errorf(format string, args ...interface{})   {}
 func (l *MockLoggerType) Fatal(args ...interface{})                   {}
 func (l *MockLoggerType) Fatalf(format string, args ...interface{})   {}
 
+func NewMockLogger() *Log {
+	return &Log{
+		Logger:     &MockLoggerType{},
+		slogLogger: nil,
+	}
+}
+
 func IsMock(l *Log) bool {
 	if l == nil || l.Logger == nil {
 		return true
@@ -30,7 +35,7 @@ func IsMock(l *Log) bool {
 
 // IsNil checks if the logger is nil or void (MockLogger).
 func IsNil(l *Log) bool {
-	return l == nil || l.sloglogger == nil || l.Logger == nil || IsMock(l)
+	return l == nil || l.slogLogger == nil || l.Logger == nil || IsMock(l)
 }
 
 func IsNotNil(l *Log) bool {
@@ -40,8 +45,8 @@ func IsNotNil(l *Log) bool {
 // SetVoid sets the logger to a mock logger (MockLogger).
 // This is useful for testing purposes when you want to avoid actual logging.
 func SetVoid(l *Log) {
-	l.sloglogger = nil
-	l.Logger = MockLogger
+	l.slogLogger = nil
+	l.Logger = (*MockLoggerType)(nil)
 }
 
 // CheckAndSetVoid checks if the logger is nil or void, and sets it to MockLogger if it is.

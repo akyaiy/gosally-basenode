@@ -7,7 +7,7 @@ import (
 )
 
 func newLogger(w io.Writer, o slog.HandlerOptions) *Log {
-	return &Log{sloglogger: slog.New(slog.NewTextHandler(w, &o))}
+	return &Log{slogLogger: slog.New(slog.NewTextHandler(w, &o))}
 }
 
 func InitBaseLog() *GSLog {
