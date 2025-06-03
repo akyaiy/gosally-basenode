@@ -41,7 +41,7 @@ lint:
 check: fmt vet lint test
 
 licenses:
-	@$(GOPATH)/bin/go-licenses save ./... --save_path=third_party/licenses
+	@$(GOPATH)/bin/go-licenses save ./... --save_path=third_party/licenses --force
 	@echo "Licenses have been exported to third_party/licenses"
 
 clean:
