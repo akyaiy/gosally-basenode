@@ -7,19 +7,51 @@ import (
 	"github.com/akyaiy/gosally-basenode/internal/sessions"
 )
 
-type DBDriver interface {
+// DriverContract defines the interface for database drivers.
+type DriverContract interface {
+	// Init initializes the driver and returns a Driver instance.
 	Init() (*Driver, error)
 
-	Connect(o string) error
+	// Connect connecting to the database using the provided connection string.
+	Connect(o *DatabaseConnectionOpt) error
+
+	// Close closes the database connection.
 	Close() error
+}
+
+type DatabaseConnectionOpt struct {
+	ConnectionString string
+	Timeout          int64
+	ConnectionID     string
+}
+
+type ConnectionBuilderContract interface {
+	WithConnectionString(connectionString string) *ConnectionBuilder
+	WithTimeout(timeout int64) *ConnectionBuilder
+	WithConnectionID(connectionID string) *ConnectionBuilder
+	EndSafeBuild() (*DatabaseConnectionOpt, error)
+	EndBuild() *DatabaseConnectionOpt
+}
+
+type ConnectionBuilder struct {
+	opts DatabaseConnectionOpt
 }
 
 type Driver struct {
 	Log    logger.Log
-	driver *DriversAvailable
+	driver *DriversType
 }
 
-type DriversAvailable struct {
+// DriversType is a map that holds available database drivers.
+type DriversType map[string]any
+
+var Drivers DriversType = DriversType{
+	"sqlite": &SQLiteDriver{
+		SQLite: nil,
+	},
+}
+
+type SQLiteDriver struct {
 	SQLite *sql.DB
 }
 
