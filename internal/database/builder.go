@@ -50,9 +50,10 @@ func (b *ConnectionBuilder) EndBuild() *DatabaseConnectionOpt {
 }
 
 func NewDriver() *DriverBuilder {
+	log := logger.NewMockLogger()
 	return &DriverBuilder{
 		driver: Driver{
-			Log: logger.NewMockLogger(), // Logger should be set later
+			Log: &log, // Logger should be set later
 		},
 	}
 }

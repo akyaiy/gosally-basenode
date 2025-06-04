@@ -18,8 +18,8 @@ func (l *MockLoggerType) Errorf(format string, args ...interface{})   {}
 func (l *MockLoggerType) Fatal(args ...interface{})                   {}
 func (l *MockLoggerType) Fatalf(format string, args ...interface{})   {}
 
-func NewMockLogger() *Log {
-	return &Log{
+func NewMockLogger() Log {
+	return Log{
 		Logger:     &MockLoggerType{},
 		slogLogger: nil,
 	}

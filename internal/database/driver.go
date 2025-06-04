@@ -28,24 +28,10 @@ func (d *Driver) Connect(o *DatabaseConnectionOpt) error {
 	return d.driver._internalConnect(o)
 }
 
-func (d* Driver) Close(o *DatabaseConnectionOpt) error {
+func (d *Driver) Close(o *DatabaseConnectionOpt) error {
 	if err := checkConnectionOpts(o); err != nil {
 		return err
 	}
 	d.Log.Debug("Closing database connection with connection ID", "id", o.ConnectionID)
 	return d.driver._internalClose(o)
 }
-
-// func (d *Driver) Close() error {
-// 	d.Log.Debug("Closing database connection")
-
-// 	if _, ok := d.driver[DriverTypeSQLite].(*_SQLiteDriver); ok {
-// 		d.Log.Debug("Closing SQLite driver connection")
-// 		if err := d.sqliteClose(); err != nil {
-// 			d.Log.Error("Failed to close SQLite driver connection", "error", err)
-// 			return err
-// 		}
-// 	}
-
-// 	return nil
-// }

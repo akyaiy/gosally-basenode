@@ -9,7 +9,7 @@ func NewDriver() *DriverBuilder {
 	driver := &DriverBuilder{
 		driver: Driver{
 			Config: config.Config{},
-			Log:    *logger.NewMockLogger(),
+			Log:    logger.NewMockLogger(),
 		},
 	}
 
