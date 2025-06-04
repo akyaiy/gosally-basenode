@@ -58,11 +58,10 @@ type Driver struct {
 	driver DriversType
 }
 
-// DriversType is a map that holds available database drivers.
-type DriversType map[int]any
+type DriversType _internalDriverContract
 
 // _driversDefinitions holds the definitions of available drivers.
-var _driversDefinitions DriversType = DriversType{
+var _driversDefinitions map[int]any = map[int]any{
 	DriverTypeSQLite: &_SQLiteDriver{
 		SQLite: nil,
 	},
@@ -75,13 +74,23 @@ var _driversDefinitions DriversType = DriversType{
 	*/
 }
 
+type _internalDriverContract interface {
+	_internalConnect() error
+	_internalClose() error
+}
+
 type _SQLiteDriver struct {
 	SQLite *sql.DB
 }
 
-type ConnectionSessionsDB interface {
-	InitSession(o *sessions.Session) error
+type SessionStorageContract interface {
+	SaveSession(o *sessions.Session) error
 	QuerySession(o *sessions.Session) (*sessions.Session, error)
 	UpdateSession(o *sessions.Session) error
-	CloseSession(o *sessions.Session) error
+	DeleteSession(o *sessions.Session) error
+}
+
+type SessionStorage struct {
+	Log logger.Log
+	//driver 
 }

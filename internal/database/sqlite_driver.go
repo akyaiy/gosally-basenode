@@ -8,7 +8,12 @@ package database
 // "path/filepath"
 // "strings"
 
-func (d *Driver) sqliteConnect() error {
+func (d *_SQLiteDriver ) _internalConnect() error {
+	// just let me cook
+	return nil
+}
+
+func (d *_SQLiteDriver) _internalClose() error {
 	// just let me cook
 	return nil
 }

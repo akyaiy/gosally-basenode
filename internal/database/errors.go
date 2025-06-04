@@ -9,4 +9,5 @@ var (
 
 	ErrDriverNotFound = errors.New("driver not found in the available drivers list")
 	ErrLoggerNotSet   = errors.New("logger is not set, please set a logger before using the driver")
+	ErrUnsupportedDriverType = errors.New("unsupported driver type, please use a supported driver type")
 )
