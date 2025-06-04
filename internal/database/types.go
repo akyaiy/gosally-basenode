@@ -29,7 +29,7 @@ type DatabaseConnectionOpt struct {
 	ConnectionID     string
 }
 
-type ConnectionBuilderContract interface {
+type DatabaseConnectionBuilderContract interface {
 	WithConnectionString(connectionString string) *ConnectionBuilder
 	WithTimeout(timeout int64) *ConnectionBuilder
 	WithConnectionID(connectionID string) *ConnectionBuilder
@@ -54,7 +54,7 @@ type DriverBuilder struct {
 }
 
 type Driver struct {
-	Log    logger.Log
+	Log    *logger.Log
 	driver DriversType
 }
 
@@ -66,20 +66,25 @@ var _driversDefinitions map[int]any = map[int]any{
 		SQLite: nil,
 	},
 	/*
-		The following drivers are not implemented yet, but can be added later:
-		DriverTypePostgres: &PostgresDriver{
-			Postgres: nil,
-		},
-		etc.
+	   The following drivers are not implemented yet, but can be added later:
+
+	   	DriverTypePostgres: &PostgresDriver{
+	   		Postgres: nil,
+	   	},
+
+	   etc.
 	*/
 }
 
 type _internalDriverContract interface {
-	_internalConnect() error
-	_internalClose() error
+	GetLogger() (*logger.Log, error)
+	SetLogger(logger *logger.Log) error
+	_internalConnect(o *DatabaseConnectionOpt) error
+	_internalClose(o *DatabaseConnectionOpt) error
 }
 
 type _SQLiteDriver struct {
+	Log    *logger.Log
 	SQLite *sql.DB
 }
 
@@ -92,5 +97,5 @@ type SessionStorageContract interface {
 
 type SessionStorage struct {
 	Log logger.Log
-	//driver 
+	//driver
 }

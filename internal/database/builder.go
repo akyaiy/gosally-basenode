@@ -52,19 +52,23 @@ func (b *ConnectionBuilder) EndBuild() *DatabaseConnectionOpt {
 func NewDriver() *DriverBuilder {
 	return &DriverBuilder{
 		driver: Driver{
-			Log: *logger.NewMockLogger(), // Logger should be set later
+			Log: logger.NewMockLogger(), // Logger should be set later
 		},
 	}
 }
 
 func (b *DriverBuilder) WithLogger(log logger.Log) *DriverBuilder {
-	b.driver.Log = log
+	b.driver.Log = &log
 	return b
 }
 
 func (b *DriverBuilder) WithDriverType(driverType int) *DriverBuilder {
 	if driver, exists := _driversDefinitions[driverType]; exists {
 		b.driver.driver = driver.(DriversType)
+		if err := b.driver.driver.SetLogger(b.driver.Log); err != nil {
+			panic(err) // Ensure the driver has a logger set
+		} // Ensure the driver has a logger set
+		// Set the logger for the driver
 	} else {
 		panic(ErrDriverNotFound)
 	}
